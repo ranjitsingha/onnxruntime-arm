@@ -19,15 +19,15 @@ elif [[ "$(uname -m)" == "arm64" ]]; then
 fi
 
 # Start the basic build
-./build.sh --config ${BUILDTYPE} ${ARCH_ARGS} --update --build
+./build.sh --use_openmp --parallel --config ${BUILDTYPE} ${ARCH_ARGS} --update --build
 
 # Build Shared Library
-./build.sh --config ${BUILDTYPE} ${ARCH_ARGS} --build_shared_lib
+./build.sh --use_openmp --parallel --config ${BUILDTYPE} ${ARCH_ARGS} --build_shared_lib
 
 # Build Python Bindings and Wheel
-./build.sh --config ${BUILDTYPE} ${ARCH_ARGS} --enable_pybind --build_wheel
+./build.sh --use_openmp --parallel --config ${BUILDTYPE} ${ARCH_ARGS} --enable_pybind --build_wheel
 
 # Build NuGet package
-./build.sh --config ${BUILDTYPE} ${ARCH_ARGS} --build_nuget
+./build.sh --use_openmp --parallel --config ${BUILDTYPE} ${ARCH_ARGS} --build_nuget
 
 mv build/* /build/
