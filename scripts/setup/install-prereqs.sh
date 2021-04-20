@@ -15,6 +15,9 @@ apt update && apt install -y \
     wget \
     python3 \
     python3-dev \
+    python3-pip \
+    python3-setuptools \
+    python3-wheel \
     git \
     tar \
     libatlas-base-dev \
@@ -22,16 +25,12 @@ apt update && apt install -y \
     mono-complete \
     mono-devel
 
-# Carefully install the latest version of pip
-cd /pip
-wget https://bootstrap.pypa.io/get-pip.py
-python3 get-pip.py
-pip3 install --upgrade setuptools
-pip3 install --upgrade wheel
-pip3 install numpy
+# Install latest versions
+python3 -m pip install --upgrade pip setuptools wheel
+python3 -m pip install numpy
 
 # Build the latest cmake
-cd /code
+cd "$(mktemp -d)"
 cmake_version="3.18.3"
 cmake_filename="cmake-${cmake_version}"
 wget "https://github.com/Kitware/CMake/releases/download/v${cmake_version}/${cmake_filename}.tar.gz"
