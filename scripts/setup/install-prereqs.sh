@@ -39,5 +39,5 @@ tar zxf "${cmake_filename}.tar.gz"
 
 cd "${cmake_filename}"
 ./configure --system-curl
-make
+make -j$(nproc)
 make install
