@@ -28,4 +28,4 @@ jobs:
             pitop/onnxruntime-arm:latest
           ls -lR ${{ github.workspace }}
 
-      # TODO: upload build artifacts
+      # TODO: upload build artifacts to Release

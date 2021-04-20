@@ -18,15 +18,16 @@ elif [[ "$(uname -m)" == "arm64" ]]; then
   ARCH_ARGS="--arm64"
 fi
 
-# --use_openblas
-# --build_java
-Compiling the Java API requires gradle v6.1+ to be installed in addition to the usual requirements.
-Node.js –build_nodejs
-./build.sh \
-  --use_openmp \
-  --update \
-  --config ${BUILDTYPE} ${ARCH_ARGS} \
-  --build_wheel \
-  --build_nuget
+# Start the basic build
+./build.sh --config ${BUILDTYPE} ${ARCH_ARGS} --update --build
+
+# Build Shared Library
+./build.sh --config ${BUILDTYPE} ${ARCH_ARGS} --build_shared_lib
+
+# Build Python Bindings and Wheel
+./build.sh --config ${BUILDTYPE} ${ARCH_ARGS} --enable_pybind --build_wheel
+
+# Build NuGet package
+./build.sh --config ${BUILDTYPE} ${ARCH_ARGS} --build_nuget
 
 mv build/* /build/
