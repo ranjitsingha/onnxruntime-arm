@@ -5,7 +5,7 @@ VOLUME /src
 # Artifacts path to build if BUILD=1
 VOLUME /build
 
-COPY scripts/install-prereqs.sh /install-prereqs
+COPY scripts/setup/install-prereqs.sh /install-prereqs
 RUN /install-prereqs
 
 COPY scripts/build/clone-onnxruntime.sh /clone-onnxruntime
