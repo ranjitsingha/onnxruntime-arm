@@ -15,12 +15,6 @@ on:
 jobs:
   build-push-docker-hub:
     runs-on: ubuntu-20.04
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2.2.0
-        with:
-          fetch-depth: 0
-
       - name: Enable architecture emulation
         run: |
           docker run --rm --privileged \
