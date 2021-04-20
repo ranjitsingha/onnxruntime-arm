@@ -24,7 +24,7 @@ apt update && apt install -y \
     libopenblas-dev \
     mono-complete \
     mono-devel \
-    zlib
+    zlib1g-dev
 
 # Install latest versions
 python3 -m pip install --upgrade pip setuptools wheel
