@@ -1,0 +1,37 @@
+name: Build onnxruntime, Upload Artifacts
+
+on:
+  # Run when image is updated
+  workflow_run:
+    workflows: ["Build Image, Push to Docker Hub (on master)"]
+    branches:
+      - master
+    types:
+      - completed
+  # Run daily at midnight to check for new versions
+  schedule:
+    - cron:  '0 0 * * *'
+
+jobs:
+  build-push-docker-hub:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2.2.0
+        with:
+          fetch-depth: 0
+
+      - name: Enable architecture emulation
+        run: |
+          docker run --rm --privileged \
+            docker/binfmt:a7996909642ee92942dcd6cff44b9b95f08dad64
+
+      - name: Run build
+        run: |
+          docker run --rm \
+            --platform="linux/arm/v7" \
+            --volume ${{ github.workspace }}:/build \
+            pitop/onnxruntime-arm:latest
+          ls -lR ${{ github.workspace }}
+
+      # TODO: upload build artifacts
