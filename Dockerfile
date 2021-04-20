@@ -8,8 +8,8 @@ VOLUME /build
 COPY scripts/install-prereqs.sh /install-prereqs
 RUN /install-prereqs
 
-COPY scripts/build/clone.sh /clone
-COPY scripts/build/build.sh /build
+COPY scripts/build/clone-onnxruntime.sh /clone-onnxruntime
+COPY scripts/build/build-onnxruntime.sh /build-onnxruntime
 COPY scripts/build/entrypoint.sh /entrypoint
 ENTRYPOINT ["/entrypoint"]
 
