@@ -15,6 +15,7 @@ on:
 jobs:
   build-ort-upload-artifacts:
     runs-on: ubuntu-20.04
+    if: ${{ github.event_name == 'schedule' }} || ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: Enable architecture emulation
         run: |
