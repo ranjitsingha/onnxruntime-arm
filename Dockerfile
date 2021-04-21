@@ -1,5 +1,8 @@
 FROM debian:testing
 
+# Add piwheels support (pre-compiled binary Python packages for RPi)
+COPY files/pip.conf /etc
+
 # Source code path to clone to if CLONE=1
 VOLUME /src
 # Artifacts path to build if BUILD=1
