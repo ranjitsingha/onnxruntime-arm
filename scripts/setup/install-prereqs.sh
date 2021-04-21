@@ -9,6 +9,7 @@ IFS=$'\n\t'
 
 apt update && apt install -y \
     build-essential \
+    cmake \
     curl \
     libcurl4-openssl-dev \
     libssl-dev \
@@ -29,15 +30,3 @@ apt update && apt install -y \
 # Install latest versions
 python3 -m pip install --upgrade pip setuptools wheel
 python3 -m pip install numpy
-
-# Build the latest cmake
-cd "$(mktemp -d)"
-cmake_version="3.18.3"
-cmake_filename="cmake-${cmake_version}"
-wget "https://github.com/Kitware/CMake/releases/download/v${cmake_version}/${cmake_filename}.tar.gz"
-tar zxf "${cmake_filename}.tar.gz"
-
-cd "${cmake_filename}"
-./configure --system-curl
-make -j$(nproc)
-make install

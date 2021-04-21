@@ -18,6 +18,9 @@ elif [[ "$(uname -m)" == "arm64" ]]; then
   ARCH_ARGS="--arm64"
 fi
 
+# Docs
+# https://www.onnxruntime.ai/docs/how-to/build.html
+
 # Start the basic build
 ./build.sh --use_openmp --parallel --config ${BUILDTYPE} ${ARCH_ARGS} --update --build
 
