@@ -6,6 +6,9 @@ FROM balenalib/raspberrypi3-python:latest-stretch-build
 ARG ONNXRUNTIME_REPO=https://github.com/Microsoft/onnxruntime
 ARG ONNXRUNTIME_SERVER_BRANCH=master
 
+# Add piwheels support (pre-compiled binary Python packages for RPi)
+COPY files/pip.conf /etc
+
 # Enforces cross-compilation through Qemu.
 RUN [ "cross-build-start" ]
 
