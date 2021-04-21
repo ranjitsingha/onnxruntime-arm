@@ -1,4 +1,4 @@
-FROM debian:buster-backports
+FROM debian:buster
 
 # Add piwheels support (pre-compiled binary Python packages for RPi)
 COPY files/pip.conf /etc
