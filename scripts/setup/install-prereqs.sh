@@ -30,7 +30,7 @@ apt-get install -t buster-backports -y \
     mono-devel
 
 # git workaround: https://superuser.com/questions/1642858/git-throws-fatal-unable-to-access-https-github-com-user-repo-git-failed-se
-apt-get install -y libcurl3-gnutls=7.64.0-4+deb10u2
+apt-get install -y --allow-downgrades libcurl3-gnutls=7.64.0-4+deb10u2
 
 # Install latest versions
 python3 -m pip install --upgrade pip setuptools wheel
