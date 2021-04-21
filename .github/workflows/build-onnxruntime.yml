@@ -1,0 +1,20 @@
+name: Build onnxruntime, Upload Artifacts
+
+on:
+  # Run when the image builder changes
+  push:
+    branches:
+      - master
+  # Run daily at midnight to check for new versions
+  schedule:
+    - cron:  '0 0 * * *'
+
+jobs:
+  build-ort-upload-artifacts:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2.2.0
+      - run: docker build .
+      - uses: actions/upload-artifact@v2
+        with:
+          path: build/Linux/MinSizeRel
