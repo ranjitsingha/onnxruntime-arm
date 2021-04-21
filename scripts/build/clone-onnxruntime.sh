@@ -15,7 +15,12 @@ get_latest_release() {
     sed -E 's/.*"([^"]+)".*/\1/'                                     # Pluck JSON value
 }
 
-ONNXRUNTIME_REPO_ID="Microsoft/onnxruntime"
-latest_release="$(get_latest_release ${ONNXRUNTIME_REPO_ID})"
+onnxruntime_repo_id="Microsoft/onnxruntime"
 
-git clone --depth 1 --single-branch --branch "${latest_release}" --recursive "https://github.com/${ONNXRUNTIME_REPO_ID}" onnxruntime
+git clone \
+  --depth 1 \
+  --single-branch \
+  --branch $(get_latest_release ${onnxruntime_repo_id}) \
+  --recursive \
+  https://github.com/${onnxruntime_repo_id}.git \
+  onnxruntime

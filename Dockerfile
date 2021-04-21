@@ -5,6 +5,7 @@ COPY files/pip.conf /etc
 
 # Source code path to clone to if CLONE=1
 VOLUME /src
+
 # Artifacts path to build if BUILD=1
 VOLUME /build
 
@@ -30,4 +31,3 @@ ENV BUILD=1
 
 # ~ Debian
 ENV DEBIAN_FRONTEND=noninteractive
-
