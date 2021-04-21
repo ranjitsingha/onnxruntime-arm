@@ -31,6 +31,8 @@ apt-get install -y \
 # mono-devel
 
 # Newer cmake than is available in backports is required
+# QEMU/armhf/cmake combination does not work
+# https://gitlab.kitware.com/cmake/cmake/-/issues/20568
 wget https://github.com/Kitware/CMake/releases/download/v3.18.3/cmake-3.18.3.tar.gz
 tar zxf cmake-3.18.3.tar.gz
 
