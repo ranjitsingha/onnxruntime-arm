@@ -36,4 +36,5 @@ ENV DEBIAN_FRONTEND=noninteractive
 # TEST BUILD #
 ##############
 # This should be removed once the build passes
+RUN mkdir -p /src
 RUN /entrypoint
