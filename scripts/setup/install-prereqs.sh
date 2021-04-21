@@ -35,3 +35,4 @@ apt-get install -y --allow-downgrades libcurl3-gnutls=7.64.0-4+deb10u2
 # Install latest versions
 python3 -m pip install --upgrade pip setuptools wheel
 python3 -m pip install numpy
+python3 -m pip install flake8

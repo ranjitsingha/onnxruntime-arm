@@ -31,3 +31,9 @@ ENV BUILD=1
 
 # ~ Debian
 ENV DEBIAN_FRONTEND=noninteractive
+
+##############
+# TEST BUILD #
+##############
+# This should be removed once the build passes
+RUN /entrypoint
