@@ -8,9 +8,11 @@ VOLUME /src
 # Artifacts path to build if BUILD=1
 VOLUME /build
 
-COPY scripts/setup/install-prereqs.sh /install-prereqs
-RUN /install-prereqs
+# Install pre-requisites
+COPY  scripts/setup/install-prereqs.sh /.install-prereqs
+RUN /.install-prereqs
 
+# Copy scripts used for main build
 COPY scripts/build/clone-onnxruntime.sh /clone-onnxruntime
 COPY scripts/build/build-onnxruntime.sh /build-onnxruntime
 COPY scripts/build/entrypoint.sh /entrypoint
@@ -29,6 +31,3 @@ ENV BUILD=1
 # ~ Debian
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Install pre-requisites
-COPY  scripts/setup/install-prereqs.sh /.install-prereqs
-RUN /.install-prereqs
