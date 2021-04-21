@@ -30,9 +30,6 @@ apt-get install -y \
 # mono-complete
 # mono-devel
 
-# git workaround: https://superuser.com/questions/1642858/git-throws-fatal-unable-to-access-https-github-com-user-repo-git-failed-se
-apt-get install -y --allow-downgrades libcurl3-gnutls=7.64.0-4+deb10u2
-
 # Newer cmake than is available in backports is required
 wget https://github.com/Kitware/CMake/releases/download/v3.18.3/cmake-3.18.3.tar.gz
 tar zxf cmake-3.18.3.tar.gz
