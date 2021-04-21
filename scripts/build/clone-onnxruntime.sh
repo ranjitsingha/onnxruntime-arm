@@ -22,5 +22,5 @@ git clone \
   --single-branch \
   --branch $(get_latest_release ${onnxruntime_repo_id}) \
   --recursive \
-  git://github.com/${onnxruntime_repo_id}.git \
+  https://github.com/${onnxruntime_repo_id}.git \
   onnxruntime
