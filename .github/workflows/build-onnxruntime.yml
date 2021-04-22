@@ -12,6 +12,7 @@ on:
 jobs:
   build-ort-upload-artifacts:
     runs-on: ubuntu-20.04
+    timeout-minutes: 1440  # Don't fail after 6 hours - extend to 24
     steps:
       - uses: actions/checkout@v2.2.0
       - run: docker build .
