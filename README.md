@@ -21,7 +21,7 @@ sudo apt install docker.io docker-compose -y
 sudo systemctl enable docker
 sudo gpasswd -a $USER docker
 newgrp docker
-usermod -aG docker $(whoami)
+sudo usermod -aG docker $(whoami)
 
 # Add current user to sudoer file
 echo "${USER}  ALL=(ALL) NOPASSWD:ALL" | sudo tee "/etc/sudoers.d/${USER}"
@@ -41,4 +41,6 @@ sudo ./bin/installdependencies.sh
 # Configure runner as a systemd service
 sudo ./svc.sh install
 sudo ./svc.sh start
+
+sudo reboot
 ```
