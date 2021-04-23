@@ -1,10 +1,7 @@
-# Import info for 32-bit Qemu based build
-# There are also raspberry pi 4 and 64-bit images available so adjust as required
-FROM balenalib/raspberrypi3-python:latest-stretch-build
-# FROM balenalib/raspberrypi3:buster
+# Adapted from https://github.com/microsoft/onnxruntime/blob/master/dockerfiles/Dockerfile.arm32v7
+FROM balenalib/raspberrypi3:buster
 
-ARG ONNXRUNTIME_REPO=https://github.com/Microsoft/onnxruntime
-ARG ONNXRUNTIME_SERVER_BRANCH=master
+ARG ONNXRUNTIME_REPO_ID="Microsoft/onnxruntime"
 
 # Add piwheels support (pre-compiled binary Python packages for RPi)
 COPY files/pip.conf /etc
@@ -23,7 +20,8 @@ RUN install_packages \
     python3-dev \
     git \
     tar \
-    libatlas-base-dev
+    libatlas-base-dev \
+    mono-complete
 
 # Carefully install the latest version of pip 
 WORKDIR /pip
@@ -32,6 +30,7 @@ RUN python3 get-pip.py
 RUN pip3 install --upgrade setuptools
 RUN pip3 install --upgrade wheel
 RUN pip3 install numpy
+RUN pip3 install flake8
 
 # Build the latest cmake
 WORKDIR /code
@@ -43,15 +42,25 @@ RUN ./configure --system-curl
 RUN make
 RUN sudo make install
 
-# if doing a 64-bit build change '--arm' to '--arm64'
-ARG BUILDARGS="--config MinSizeRel --arm"
+# Build 32-bit
+ARG ARCH_ARGS="--arm"
 
 # Prepare onnxruntime Repo
 WORKDIR /code
-RUN git clone --single-branch --branch ${ONNXRUNTIME_SERVER_BRANCH} --recursive ${ONNXRUNTIME_REPO} onnxruntime
+RUN git clone \
+  --depth 1 \
+  --single-branch \
+  --branch $(curl --silent "https://api.github.com/repos/${ONNXRUNTIME_REPO_ID}/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/') \
+  --recursive \
+  "https://github.com/${ONNXRUNTIME_REPO_ID}" \
+  onnxruntime
 
 # Build ORT including the shared lib and python bindings
 WORKDIR /code/onnxruntime
-RUN ./build.sh --use_openmp ${BUILDARGS} --update --build --build_shared_lib --build_wheel
+RUN ./build.sh \
+    --use_openmp \
+    --config MinSizeRel ${ARCH_ARGS} \
+    --update \
+    --build --build_shared_lib --build_wheel --build_nuget
 
 RUN [ "cross-build-end" ]
