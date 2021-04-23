@@ -15,7 +15,20 @@ jobs:
     timeout-minutes: 1440  # Don't fail after 6 hours - extend to 24
     steps:
       - uses: actions/checkout@v2.2.0
-      - run: docker build .
-      - uses: actions/upload-artifact@v2
+
+      - name: Build Docker image
+        run: |
+          docker build -t ort-builder .
+
+      - name: Instantiate Docker image
+        run: |
+          docker create -ti --name ort-builder-tmp ort-builder bash
+
+      - name: Extract build files from Docker instance
+        run: |
+          docker cp -R ort-builder-tmp:/code/onnxruntime/build .
+
+      - name: Upload build files
+        uses: actions/upload-artifact@v2
         with:
-          path: build/Linux/MinSizeRel
+          path: build
