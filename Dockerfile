@@ -1,5 +1,5 @@
 # Adapted from https://github.com/microsoft/onnxruntime/blob/master/dockerfiles/Dockerfile.arm32v7
-FROM balenalib/raspberrypi3:buster
+FROM balenalib/raspberrypi3-python:latest-stretch-build
 
 ARG ONNXRUNTIME_REPO_ID="Microsoft/onnxruntime"
 
@@ -61,6 +61,7 @@ RUN ./build.sh \
     --use_openmp \
     --config MinSizeRel ${ARCH_ARGS} \
     --update \
-    --build --build_shared_lib --build_wheel --build_nuget
+    --parallel \
+    --build --build_shared_lib --build_wheel
 
 RUN [ "cross-build-end" ]
