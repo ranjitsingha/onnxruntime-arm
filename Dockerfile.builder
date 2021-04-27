@@ -31,11 +31,13 @@ RUN pip3 install --install-option="--jobs=$(nproc)" numpy
 RUN pip3 install flake8
 
 # Build the latest cmake
-WORKDIR /code
+WORKDIR /
 RUN wget https://github.com/Kitware/CMake/releases/download/v3.18.3/cmake-3.18.3.tar.gz
-RUN tar zxf cmake-3.18.3.tar.gz
+RUN tar zxf cmake-3.18.3.tar.gz && rm cmake-3.18.3.tar.gz
 
-WORKDIR /code/cmake-3.18.3
+WORKDIR /cmake-3.18.3
 RUN ./configure --system-curl
 RUN make -j$(nproc)
 RUN sudo make install
+
+RUN rm /cmake-3.18.3

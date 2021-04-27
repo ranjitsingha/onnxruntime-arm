@@ -36,7 +36,7 @@ jobs:
 
       - run: |
           docker create -ti --name ort-builder-tmp ort-builder bash
-          docker cp ort-builder-tmp:/code/onnxruntime/build .
+          docker cp ort-builder-tmp:/onnxruntime/build .
 
       - name: Upload build files
         uses: actions/upload-artifact@v2

@@ -3,7 +3,7 @@ FROM pitop/onnxruntime-builder:latest
 RUN [ "cross-build-start" ]
 
 # Prepare onnxruntime Repo
-WORKDIR /code
+WORKDIR /
 
 RUN git clone \
   --depth 1 \
@@ -14,7 +14,7 @@ RUN git clone \
   onnxruntime
 
 # Build ORT including the shared lib and python bindings
-WORKDIR /code/onnxruntime
+WORKDIR /onnxruntime
 RUN ./build.sh \
     --use_openmp \
     --config MinSizeRel \
