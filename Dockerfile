@@ -42,9 +42,6 @@ RUN ./configure --system-curl
 RUN make -j$(nproc)
 RUN sudo make install
 
-# Build 32-bit
-ARG ARCH_ARGS="--arm"
-
 # Prepare onnxruntime Repo
 WORKDIR /code
 RUN git clone \
@@ -59,7 +56,9 @@ RUN git clone \
 WORKDIR /code/onnxruntime
 RUN ./build.sh \
     --use_openmp \
-    --config MinSizeRel ${ARCH_ARGS} \
+    --config MinSizeRel \
+    # 32-bit ARM - currently only supported via cross-compiling; not compatible with NuGet
+    --arm \
     --update \
     --parallel \
     --build --build_shared_lib --build_wheel
