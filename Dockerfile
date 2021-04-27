@@ -61,6 +61,6 @@ RUN ./build.sh \
     --arm \
     --update \
     --parallel \
-    --build --build_shared_lib --build_wheel
+    --build_wheel
 
 RUN [ "cross-build-end" ]
