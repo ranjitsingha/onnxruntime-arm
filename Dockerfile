@@ -8,9 +8,9 @@ WORKDIR /code
 RUN git clone \
   --depth 1 \
   --single-branch \
-  --branch $(curl --silent "https://api.github.com/repos/${ONNXRUNTIME_REPO_ID}/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/') \
+  --branch $(curl --silent "https://api.github.com/repos/Microsoft/onnxruntime/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/') \
   --recursive \
-  "https://github.com/${ONNXRUNTIME_REPO_ID}" \
+  "https://github.com/Microsoft/onnxruntime" \
   onnxruntime
 
 # Build ORT including the shared lib and python bindings

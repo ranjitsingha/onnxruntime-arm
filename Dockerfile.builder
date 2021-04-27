@@ -1,8 +1,6 @@
 # Adapted from https://github.com/microsoft/onnxruntime/blob/master/dockerfiles/Dockerfile.arm32v7
 FROM balenalib/raspberrypi3-python:latest-stretch-build
 
-ARG ONNXRUNTIME_REPO_ID="Microsoft/onnxruntime"
-
 # Add piwheels support (pre-compiled binary Python packages for RPi)
 COPY files/pip.conf /etc
 

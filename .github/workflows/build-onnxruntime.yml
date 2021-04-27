@@ -26,6 +26,7 @@ jobs:
 
   build:
     needs: create-builder
+    if: always()
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2.2.0
