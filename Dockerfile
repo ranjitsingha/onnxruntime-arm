@@ -29,7 +29,7 @@ RUN wget https://bootstrap.pypa.io/get-pip.py
 RUN python3 get-pip.py
 RUN pip3 install --upgrade setuptools
 RUN pip3 install --upgrade wheel
-RUN pip3 install numpy
+RUN pip3 install --install-option="--jobs=$(nproc)" numpy
 RUN pip3 install flake8
 
 # Build the latest cmake
