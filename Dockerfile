@@ -39,7 +39,7 @@ RUN tar zxf cmake-3.18.3.tar.gz
 
 WORKDIR /code/cmake-3.18.3
 RUN ./configure --system-curl
-RUN make
+RUN make -j$(nproc)
 RUN sudo make install
 
 # Build 32-bit
