@@ -20,8 +20,7 @@ RUN ./build.sh \
     --config MinSizeRel \
     # 32-bit ARM - currently only supported via cross-compiling; not compatible with NuGet
     --arm \
-    --update \
-    --parallel \
-    --build_wheel
+    --update --build --build_shared_lib --build_wheel \
+    --parallel
 
 RUN [ "cross-build-end" ]
