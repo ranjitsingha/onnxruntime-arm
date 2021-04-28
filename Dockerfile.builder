@@ -39,4 +39,4 @@ RUN ./configure --system-curl
 RUN make -j$(nproc)
 RUN sudo make install
 
-RUN rm /cmake-3.18.3
+RUN rm -rf /cmake-3.18.3
