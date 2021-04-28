@@ -1,0 +1,50 @@
+name: Build onnxruntime, Upload Artifacts
+
+on:
+  # Run daily at midnight to check for new versions
+  schedule:
+    - cron:  '0 0 * * *'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2.2.0
+
+      - uses: docker/build-push-action@v2
+        with:
+          tags: ort-builder
+          load: true
+
+      - name: Extract build artifacts from Docker image
+        run: |
+          docker create -ti --name ort-builder-tmp ort-builder bash
+          docker cp ort-builder-tmp:/onnxruntime/build .
+
+      - uses: actions/upload-artifact@v2
+        with:
+          path: ${{ github.workspace }}/build/Linux/MinSizeRel/*.so
+
+
+      - uses: actions/upload-artifact@v2
+        with:
+          path: ${{ github.workspace }}/build/Linux/MinSizeRel/dist/*.whl
+
+      - name: Convert to .deb
+        run: |
+        python3 -m pip install wheel2deb
+
+        cd ${{ github.workspace }}/build/Linux/MinSizeRel/dist/
+
+        wheel2deb --map attrs=attr
+
+        sudo apt-get update
+        sudo apt-get install -y python3-apt apt-file dpkg-dev fakeroot build-essential devscripts debhelper
+        sudo apt-file update
+
+        wheel2deb build
+
+      - uses: actions/upload-artifact@v2
+        with:
+          path: ${{ github.workspace }}/build/Linux/MinSizeRel/dist/output/*.deb
