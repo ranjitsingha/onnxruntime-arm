@@ -18,8 +18,7 @@ RUN install_packages \
     python3-dev \
     git \
     tar \
-    libatlas-base-dev \
-    mono-complete
+    libatlas-base-dev
 
 # Carefully install the latest version of pip
 WORKDIR /pip
