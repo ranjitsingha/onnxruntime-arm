@@ -17,27 +17,6 @@ RUN install_packages \
     tar \
     libatlas-base-dev
 
-# Add piwheels support (pre-compiled binary Python packages for RPi)
-COPY files/pip.conf /etc
-
-# Carefully install the latest version of pip
-WORKDIR /pip
-RUN wget https://bootstrap.pypa.io/get-pip.py \
-    && python3 get-pip.py \
-    && pip3 install --upgrade setuptools wheel numpy flake8
-
-# Build the latest cmake
-WORKDIR /
-RUN wget https://github.com/Kitware/CMake/releases/download/v3.18.3/cmake-3.18.3.tar.gz \
-    && tar zxf cmake-3.18.3.tar.gz \
-    && rm cmake-3.18.3.tar.gz \
-    && cd /cmake-3.18.3 \
-    && ./configure --system-curl \
-    && make -j$(nproc) \
-    && sudo make install \
-    && cd / \
-    && rm -rf /cmake-3.18.3
-
 # Install wheel2deb and dependencies
 RUN install_packages \
     python3-apt \
@@ -58,3 +37,24 @@ RUN install_packages \
 
 # Prepare file look-up
 RUN sudo apt-file update
+
+# Add piwheels support (pre-compiled binary Python packages for RPi)
+COPY files/pip.conf /etc
+
+# Carefully install the latest version of pip
+WORKDIR /pip
+RUN wget https://bootstrap.pypa.io/get-pip.py \
+    && python3 get-pip.py \
+    && pip3 install --upgrade setuptools wheel numpy flake8
+
+# Build the latest cmake
+WORKDIR /
+RUN wget https://github.com/Kitware/CMake/releases/download/v3.18.3/cmake-3.18.3.tar.gz \
+    && tar zxf cmake-3.18.3.tar.gz \
+    && rm cmake-3.18.3.tar.gz \
+    && cd /cmake-3.18.3 \
+    && ./configure --system-curl \
+    && make -j$(nproc) \
+    && sudo make install \
+    && cd / \
+    && rm -rf /cmake-3.18.3
