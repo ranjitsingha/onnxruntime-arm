@@ -1,9 +1,6 @@
 # Adapted from https://github.com/microsoft/onnxruntime/blob/master/dockerfiles/Dockerfile.arm32v7
 FROM balenalib/raspberrypi3-python:3.7-stretch-build
 
-# Add piwheels support (pre-compiled binary Python packages for RPi)
-COPY files/pip.conf /etc
-
 # Enforces cross-compilation through Qemu.
 RUN [ "cross-build-start" ]
 
@@ -20,23 +17,40 @@ RUN install_packages \
     tar \
     libatlas-base-dev
 
+# Add piwheels support (pre-compiled binary Python packages for RPi)
+COPY files/pip.conf /etc
+
 # Carefully install the latest version of pip
 WORKDIR /pip
-RUN wget https://bootstrap.pypa.io/get-pip.py
-RUN python3 get-pip.py
-RUN pip3 install --upgrade setuptools
-RUN pip3 install --upgrade wheel
-RUN pip3 install --install-option="--jobs=$(nproc)" numpy
-RUN pip3 install flake8
+RUN wget https://bootstrap.pypa.io/get-pip.py \
+    && python3 get-pip.py \
+    && pip3 install --upgrade setuptools wheel numpy flake8
 
 # Build the latest cmake
 WORKDIR /
-RUN wget https://github.com/Kitware/CMake/releases/download/v3.18.3/cmake-3.18.3.tar.gz
-RUN tar zxf cmake-3.18.3.tar.gz && rm cmake-3.18.3.tar.gz
+RUN wget https://github.com/Kitware/CMake/releases/download/v3.18.3/cmake-3.18.3.tar.gz \
+    && tar zxf cmake-3.18.3.tar.gz \
+    && rm cmake-3.18.3.tar.gz \
+    && cd /cmake-3.18.3 \
+    && ./configure --system-curl \
+    && make -j$(nproc) \
+    && sudo make install \
+    && cd / \
+    && rm -rf /cmake-3.18.3
 
-WORKDIR /cmake-3.18.3
-RUN ./configure --system-curl
-RUN make -j$(nproc)
-RUN sudo make install
+# Install wheel2deb and dependencies
+RUN install_packages \
+    python3-apt \
+    apt-file \
+    dpkg-dev \
+    fakeroot \
+    build-essential \
+    devscripts \
+    debhelper \
+    && python3 -m pip install wheel2deb
 
-RUN rm -rf /cmake-3.18.3
+# Install wheel2deb dpkg-shlibdeps requirements
+RUN install_packages libc6 libgcc-8-dev libgcc-7-dev libgomp1 libstdc++6
+
+# Prepare file look-up
+RUN sudo apt-file update
