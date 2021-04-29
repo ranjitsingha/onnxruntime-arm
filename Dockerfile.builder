@@ -50,7 +50,11 @@ RUN install_packages \
     && python3 -m pip install wheel2deb
 
 # Install wheel2deb dpkg-shlibdeps requirements
-RUN install_packages libc6 libgcc-8-dev libgcc-7-dev libgomp1 libstdc++6
+RUN install_packages \
+    libc6 \
+    libgcc-6-dev \
+    libgomp1 \
+    libstdc++6
 
 # Prepare file look-up
 RUN sudo apt-file update
