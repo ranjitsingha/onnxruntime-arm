@@ -58,7 +58,7 @@ RUN wget https://github.com/Kitware/CMake/releases/download/v3.18.3/cmake-3.18.3
     && tar zxf cmake-3.18.3.tar.gz \
     && rm cmake-3.18.3.tar.gz \
     && cd /cmake-3.18.3 \
-    && ./configure --system-curl --parallel=$(nproc) \
+    && ./configure --system-curl --parallel=$(nproc) --no-system-zlib \
     && make -j$(nproc) \
     && sudo make install \
     && cd / \
