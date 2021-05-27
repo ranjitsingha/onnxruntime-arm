@@ -14,13 +14,27 @@ RUN git clone \
   onnxruntime
 
 # Build ORT including the shared lib and python bindings
+# 32-bit ARM - currently only supported via cross-compiling; not compatible with NuGet
 WORKDIR /onnxruntime
 RUN ./build.sh \
-    --use_openmp \
     --config MinSizeRel \
-    # 32-bit ARM - currently only supported via cross-compiling; not compatible with NuGet
     --arm \
-    --update --build --build_shared_lib --build_wheel \
+    --use_openmp \
+    --update \
+    --build \
+    --parallel
+
+RUN ./build.sh \
+    --config MinSizeRel \
+    --arm \
+    --build_shared_lib \
+    --parallel
+
+RUN ./build.sh \
+    --config MinSizeRel \
+    --arm \
+    --enable_pybind \
+    --build_wheel \
     --parallel
 
 RUN [ "cross-build-end" ]
