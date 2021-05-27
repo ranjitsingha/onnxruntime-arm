@@ -17,7 +17,8 @@ RUN install_packages \
     tar \
     libatlas-base-dev \
     zlib1g \
-    zlib1g-dev
+    zlib1g-dev \
+    cmake
 
 # Install wheel2deb and dependencies
 RUN install_packages \
@@ -53,13 +54,13 @@ RUN wget https://bootstrap.pypa.io/get-pip.py \
     && pip3 install flake8
 
 # Build the latest cmake
-WORKDIR /
-RUN wget https://github.com/Kitware/CMake/releases/download/v3.18.3/cmake-3.18.3.tar.gz \
-    && tar zxf cmake-3.18.3.tar.gz \
-    && rm cmake-3.18.3.tar.gz \
-    && cd /cmake-3.18.3 \
-    && ./configure --system-curl --parallel=$(nproc) --no-system-zlib \
-    && make -j$(nproc) \
-    && sudo make install \
-    && cd / \
-    && rm -rf /cmake-3.18.3
+# WORKDIR /
+# RUN wget https://github.com/Kitware/CMake/releases/download/v3.18.3/cmake-3.18.3.tar.gz \
+#     && tar zxf cmake-3.18.3.tar.gz \
+#     && rm cmake-3.18.3.tar.gz \
+#     && cd /cmake-3.18.3 \
+#     && ./configure --system-curl --parallel=$(nproc) --no-system-zlib \
+#     && make -j$(nproc) \
+#     && sudo make install \
+#     && cd / \
+#     && rm -rf /cmake-3.18.3
