@@ -16,6 +16,7 @@ RUN install_packages \
     git \
     tar \
     libatlas-base-dev \
+    zlib1g \
     zlib1g-dev
 
 # Install wheel2deb and dependencies
