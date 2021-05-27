@@ -15,7 +15,8 @@ RUN install_packages \
     python3-dev \
     git \
     tar \
-    libatlas-base-dev
+    libatlas-base-dev \
+    zlib1g-dev
 
 # Install wheel2deb and dependencies
 RUN install_packages \
