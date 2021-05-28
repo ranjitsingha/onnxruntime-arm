@@ -29,8 +29,6 @@ RUN ./configure --system-curl --parallel=$(nproc)
 RUN make -j$(nproc)
 RUN sudo make install
 
-RUN install_packages \
-
 # Uncomment en_US.UTF-8 for inclusion in generation
 RUN sed -i 's/^# *\(en_US.UTF-8\)/\1/' /etc/locale.gen
 
