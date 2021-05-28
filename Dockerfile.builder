@@ -1,6 +1,9 @@
 # Adapted from https://github.com/microsoft/onnxruntime/blob/master/dockerfiles/Dockerfile.arm32v7
 FROM balenalib/raspberrypi3-python:3.7-stretch
 
+# Enforces cross-compilation through Qemu.
+RUN [ "cross-build-start" ]
+
 RUN install_packages \
     build-essential \
     curl \
@@ -49,3 +52,4 @@ RUN pip3 install --upgrade wheel
 # Install Buster version of numpy (need to build it, sadly)
 RUN pip3 install numpy==1.16.2
 
+RUN [ "cross-build-end" ]

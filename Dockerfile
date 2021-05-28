@@ -4,7 +4,7 @@ ARG ONNXRUNTIME_REPO=https://github.com/Microsoft/onnxruntime
 ARG ONNXRUNTIME_VERSION=v1.7.2
 
 # Enforces cross-compilation through Qemu.
-# RUN [ "cross-build-start" ]
+RUN [ "cross-build-start" ]
 
 # Set up build args
 ARG BUILDTYPE=MinSizeRel
@@ -37,3 +37,5 @@ RUN ./build.sh ${BUILDARGS} \
 # Show build output
 RUN ls -l /code/onnxruntime/build/Linux/${BUILDTYPE}/*.so
 RUN ls -l /code/onnxruntime/build/Linux/${BUILDTYPE}/dist/*.whl
+
+RUN [ "cross-build-end" ]
