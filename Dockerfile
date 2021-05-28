@@ -1,40 +1,39 @@
-FROM pitop/onnxruntime-builder-buster:latest
+FROM pitop/onnxruntime-builder:latest
 
-RUN [ "cross-build-start" ]
+ARG ONNXRUNTIME_REPO=https://github.com/Microsoft/onnxruntime
+ARG ONNXRUNTIME_VERSION=v1.7.2
+
+# Enforces cross-compilation through Qemu.
+# RUN [ "cross-build-start" ]
+
+# Set up build args
+ARG BUILDTYPE=MinSizeRel
+ARG BUILDARGS="--config ${BUILDTYPE} --arm"
 
 # Prepare onnxruntime Repo
-WORKDIR /
+WORKDIR /code
+RUN git clone --depth=1 --single-branch --branch ${ONNXRUNTIME_VERSION} --recursive ${ONNXRUNTIME_REPO} onnxruntime
+WORKDIR /code/onnxruntime
 
-RUN git clone \
-  --depth 1 \
-  --single-branch \
-  --branch $(curl --silent "https://api.github.com/repos/Microsoft/onnxruntime/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/') \
-  --recursive \
-  "https://github.com/Microsoft/onnxruntime" \
-  onnxruntime
+# Patch numpy dependency version to match Buster
+RUN sed -i "s/numpy==1.16.6/numpy==1.16.2/1" ./tools/ci_build/github/linux/docker/scripts/requirements.txt
+RUN sed -i "s/numpy==1.16.6/numpy==1.16.2/1" ./tools/ci_build/github/linux/docker/scripts/training/requirements.txt
+RUN sed -i "s/numpy==1.16.6/numpy==1.16.2/1" ./tools/ci_build/github/linux/docker/scripts/manylinux/requirements.txt
+RUN sed -i "s/numpy>=1.16.6/numpy==1.16.2/1" ./tools/ci_build/build.py
+RUN sed -i "s/numpy >= 1.16.6/numpy == 1.16.2/1" ./requirements.txt
+RUN sed -i "s/numpy >= 1.16.6/numpy == 1.16.2/1" ./requirements-training.txt
+
+# Fix build errors by using latest tag in json dir
+RUN cd ./cmake/external/json && git checkout v3.9.1
 
 # Build ORT including the shared lib and python bindings
-# 32-bit ARM - currently only supported via cross-compiling; not compatible with NuGet
-WORKDIR /onnxruntime
-RUN ./build.sh \
-    --config MinSizeRel \
-    --arm \
-    --use_openmp \
-    --update \
+RUN ./build.sh ${BUILDARGS} \
+    --skip_submodule_sync --parallel --update \
     --build \
-    --parallel
-
-RUN ./build.sh \
-    --config MinSizeRel \
-    --arm \
     --build_shared_lib \
-    --parallel
-
-RUN ./build.sh \
-    --config MinSizeRel \
-    --arm \
     --enable_pybind \
-    --build_wheel \
-    --parallel
+    --build_wheel
 
-RUN [ "cross-build-end" ]
+# Show build output
+RUN ls -l /code/onnxruntime/build/Linux/${BUILDTYPE}/*.so
+RUN ls -l /code/onnxruntime/build/Linux/${BUILDTYPE}/dist/*.whl
