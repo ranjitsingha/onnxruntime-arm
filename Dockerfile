@@ -21,7 +21,7 @@ RUN sed -i "s/numpy==1.16.6/numpy==1.16.2/1" ./tools/ci_build/github/linux/docke
 RUN sed -i "s/numpy==1.16.6/numpy==1.16.2/1" ./tools/ci_build/github/linux/docker/scripts/manylinux/requirements.txt
 RUN sed -i "s/numpy>=1.16.6/numpy==1.16.2/1" ./tools/ci_build/build.py
 RUN sed -i "s/numpy >= 1.16.6/numpy == 1.16.2/1" ./requirements.txt
-RUN sed -i "s/numpy >= 1.16.6/numpy == 1.16.2/1" ./requirements-training.txt
+#RUN sed -i "s/numpy >= 1.16.6/numpy == 1.16.2/1" ./requirements-training.txt
 
 # Fix build errors by using latest tag in json dir
 RUN cd ./cmake/external/json && git checkout v3.9.1
