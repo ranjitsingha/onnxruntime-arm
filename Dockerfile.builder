@@ -1,66 +1,51 @@
 # Adapted from https://github.com/microsoft/onnxruntime/blob/master/dockerfiles/Dockerfile.arm32v7
-FROM balenalib/raspberrypi3-python:3.7-buster
-
-# Enforces cross-compilation through Qemu.
-RUN [ "cross-build-start" ]
+FROM balenalib/raspberrypi3-python:3.7-stretch
 
 RUN install_packages \
-    sudo \
     build-essential \
     curl \
+    git \
+    libatlas-base-dev \
     libcurl4-openssl-dev \
     libssl-dev \
-    wget \
-    python3 \
-    python3-dev \
-    git \
+    locales \
+    protobuf-compiler \
+    sudo \
     tar \
-    libatlas-base-dev \
+    wget \
     zlib1g \
-    zlib1g-dev \
-    cmake
+    zlib1g-dev
 
-# Install wheel2deb and dependencies
+# Build cmake
+WORKDIR /code
+RUN wget https://github.com/Kitware/CMake/releases/download/v3.18.3/cmake-3.18.3.tar.gz
+RUN tar zxf cmake-3.18.3.tar.gz
+
+WORKDIR /code/cmake-3.18.3
+RUN ./configure --system-curl --parallel=$(nproc)
+RUN make -j$(nproc)
+RUN sudo make install
+
 RUN install_packages \
-    python3-apt \
-    apt-file \
-    dpkg-dev \
-    fakeroot \
-    build-essential \
-    devscripts \
-    debhelper \
-    && python3 -m pip install wheel2deb
 
-# Install wheel2deb dpkg-shlibdeps requirements
-RUN install_packages \
-    libc6 \
-    libgcc-6-dev \
-    libgomp1 \
-    libstdc++6
+# Uncomment en_US.UTF-8 for inclusion in generation
+RUN sed -i 's/^# *\(en_US.UTF-8\)/\1/' /etc/locale.gen
 
-# Prepare file look-up
-RUN sudo apt-file update
+# Generate locale
+RUN locale-gen
 
-# Add piwheels support (pre-compiled binary Python packages for RPi)
-COPY files/pip.conf /etc
+# Export env vars (may not be necessary)
+RUN echo "export LC_ALL=en_US.UTF-8" >> ~/.bashrc
+RUN echo "export LANG=en_US.UTF-8" >> ~/.bashrc
+RUN echo "export LANGUAGE=en_US.UTF-8" >> ~/.bashrc
 
 # Carefully install the latest version of pip
 WORKDIR /pip
-RUN wget https://bootstrap.pypa.io/get-pip.py \
-    && python3 get-pip.py \
-    && pip3 install --upgrade setuptools \
-    && pip3 install --upgrade wheel \
-    && pip3 install numpy==1.16.2 \
-    && pip3 install flake8
+RUN wget https://bootstrap.pypa.io/get-pip.py
+RUN python3 get-pip.py
+RUN pip3 install --upgrade setuptools
+RUN pip3 install --upgrade wheel
 
-# Build the latest cmake
-# WORKDIR /
-# RUN wget https://github.com/Kitware/CMake/releases/download/v3.18.3/cmake-3.18.3.tar.gz \
-#     && tar zxf cmake-3.18.3.tar.gz \
-#     && rm cmake-3.18.3.tar.gz \
-#     && cd /cmake-3.18.3 \
-#     && ./configure --system-curl --parallel=$(nproc) --no-system-zlib \
-#     && make -j$(nproc) \
-#     && sudo make install \
-#     && cd / \
-#     && rm -rf /cmake-3.18.3
+# Install Buster version of numpy (need to build it, sadly)
+RUN pip3 install numpy==1.16.2
+
