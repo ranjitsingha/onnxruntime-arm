@@ -33,6 +33,10 @@ jobs:
 
       - name: Convert to .deb
         run: |
+          sudo apt update
+          sudo apt install python3-apt apt-file dpkg-dev fakeroot build-essential devscripts debhelper python3-pip -y
+          sudo apt-file update
+          pip3 install wheel2deb
           cd ${{ github.workspace }}/build/Linux/MinSizeRel/dist/
           wheel2deb --map attrs=attr
           wheel2deb build
