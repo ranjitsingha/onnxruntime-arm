@@ -20,12 +20,11 @@ jobs:
       - name: Extract build artifacts from Docker image
         run: |
           docker create -ti --name ort-builder-tmp ort-builder bash
-          docker cp ort-builder-tmp:/onnxruntime/build .
+          docker cp ort-builder-tmp:/code/onnxruntime/build/ .
 
       - uses: actions/upload-artifact@v2
         with:
           path: ${{ github.workspace }}/build/Linux/MinSizeRel/*.so
-
 
       - uses: actions/upload-artifact@v2
         with:
