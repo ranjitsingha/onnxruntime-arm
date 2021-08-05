@@ -2,8 +2,8 @@ name: Build onnxruntime, Upload Artifacts
 
 on:
   # Run daily at midnight to check for new versions
-  schedule:
-    - cron:  '0 0 * * *'
+#  schedule:
+#    - cron:  '0 0 * * *'
   workflow_dispatch:
 
 jobs:
