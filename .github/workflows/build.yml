@@ -1,45 +1,31 @@
-name: Build onnxruntime, Upload Artifacts
+name: Build ONNX Runtime Wheel for Arm64
 
 on:
-  # Run daily at midnight to check for new versions
-#  schedule:
-#    - cron:  '0 0 * * *'
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-20.04
-    steps:
-      - uses: actions/checkout@v2.2.0
 
-      - uses: docker/build-push-action@v2
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Build Docker Image
+        uses: docker/build-push-action@v2
         with:
-          tags: ort-builder
+          context: .
+          dockerfile: Dockerfile
+          tags: ort-builder:arm64
           load: true
 
-      - name: Extract build artifacts from Docker image
+      - name: Extract Wheel File
         run: |
-          docker create -ti --name ort-builder-tmp ort-builder bash
-          docker cp ort-builder-tmp:/code/onnxruntime/build/ .
+          docker create -ti --name ort-builder-tmp ort-builder:arm64 bash
+          docker cp ort-builder-tmp:/code/onnxruntime/build/Linux/MinSizeRel/dist/ .
 
-      - uses: actions/upload-artifact@v2
+      - name: Upload Wheel File
+        uses: actions/upload-artifact@v2
         with:
-          path: ${{ github.workspace }}/build/Linux/MinSizeRel/*.so
-
-      - uses: actions/upload-artifact@v2
-        with:
-          path: ${{ github.workspace }}/build/Linux/MinSizeRel/dist/*.whl
-
-      - name: Convert to .deb
-        run: |
-          sudo apt update
-          sudo apt install python3-apt apt-file dpkg-dev fakeroot build-essential devscripts debhelper python3-pip -y
-          sudo apt-file update
-          pip3 install wheel2deb
-          cd ${{ github.workspace }}/build/Linux/MinSizeRel/dist/
-          wheel2deb --map attrs=attr
-          wheel2deb build
-
-      - uses: actions/upload-artifact@v2
-        with:
-          path: ${{ github.workspace }}/build/Linux/MinSizeRel/dist/output/*
+          name: onnxruntime-arm64-wheel
+          path: dist/*.whl
